@@ -42,6 +42,14 @@
             android:textSize="14sp" />
 
         <TextView
+            android:id="@+id/app_size"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="2dp"
+            android:textColor="@color/textSecondary"
+            android:textSize="12sp" />
+
+        <TextView
             android:id="@+id/safety_indicator"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

@@ -55,6 +55,7 @@ class MainActivity : AppCompatActivity() {
     private val adapter = AppAdapter()
     private var allApps = mutableListOf<AppInfo>()
     private var currentFilter = ""
+    private var currentSort = R.id.sort_name
     private var isSystemTab = false
     
     private val uninstallQueue = mutableListOf<AppInfo>()
@@ -98,6 +99,23 @@ class MainActivity : AppCompatActivity() {
 
         setupUI()
         loadApps()
+    }
+
+    
+    override fun onCreateOptionsMenu(menu: android.view.Menu?): Boolean {
+        menuInflater.inflate(R.menu.menu_main, menu)
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: android.view.MenuItem): Boolean {
+        when (item.itemId) {
+            R.id.sort_name, R.id.sort_size, R.id.sort_tier -> {
+                currentSort = item.itemId
+                filterApps()
+                return true
+            }
+        }
+        return super.onOptionsItemSelected(item)
     }
 
     private fun setupUI() {
@@ -165,18 +183,20 @@ class MainActivity : AppCompatActivity() {
                 val isSystem = (appInfo.flags and ApplicationInfo.FLAG_SYSTEM) != 0 || 
                               (appInfo.flags and ApplicationInfo.FLAG_UPDATED_SYSTEM_APP) != 0
                 val pkg = appInfo.packageName
+                val sourceDir = appInfo.sourceDir
+                val sizeBytes = try { java.io.File(sourceDir).length() } catch(e: Exception) { 0L }
                 
                 AppInfo(
                     name = pm.getApplicationLabel(appInfo).toString(),
                     packageName = pkg,
                     isSystem = isSystem,
-                    size = 0L,
+                    size = sizeBytes,
                     tier = getDebloatTier(pkg)
                 )
             } catch (e: Exception) {
                 null
             }
-        }.sortedBy { it.name.lowercase() }
+        }
     }
     
     private fun getDebloatTier(packageName: String): Int {
@@ -205,10 +225,16 @@ class MainActivity : AppCompatActivity() {
                               app.packageName.contains(currentFilter, ignoreCase = true)
             matchesTab && matchesSearch
         }
-
-        adapter.submitList(filtered)
         
-        if (filtered.isEmpty()) {
+        val sorted = when (currentSort) {
+            R.id.sort_size -> filtered.sortedByDescending { it.size }
+            R.id.sort_tier -> filtered.sortedByDescending { it.tier }
+            else -> filtered.sortedBy { it.name.lowercase() }
+        }
+
+        adapter.submitList(sorted)
+        
+        if (sorted.isEmpty()) {
             emptyView.visibility = View.VISIBLE
             recyclerView.visibility = View.GONE
         } else {
@@ -289,6 +315,7 @@ class AppAdapter : RecyclerView.Adapter<AppAdapter.AppViewHolder>() {
         }
         holder.name.text = app.name
         holder.packageName.text = app.packageName
+        holder.appSize.text = android.text.format.Formatter.formatFileSize(context, app.size)
         
         when (app.tier) {
             1 -> {
@@ -320,6 +347,7 @@ class AppAdapter : RecyclerView.Adapter<AppAdapter.AppViewHolder>() {
         val icon: ImageView = view.findViewById(R.id.app_icon)
         val name: TextView = view.findViewById(R.id.app_name)
         val packageName: TextView = view.findViewById(R.id.package_name)
+        val appSize: TextView = view.findViewById(R.id.app_size)
         val safetyIndicator: TextView = view.findViewById(R.id.safety_indicator)
         val deleteBtn: ImageView = view.findViewById(R.id.delete_btn)
     }
