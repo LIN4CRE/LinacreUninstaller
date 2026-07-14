@@ -11,4 +11,11 @@
     <string name="error_loading">Failed to load apps</string>
     <string name="loading">Loading apps…</string>
     <string name="total_apps_format">%1$d Apps</string>
+    
+    <string name="btn_simple_debloat">Simple Debloat</string>
+    <string name="btn_debloat">Debloat</string>
+    <string name="btn_hardcore_debloat">Hardcore Debloat</string>
+    <string name="batch_uninstall_title">Batch Uninstall</string>
+    <string name="batch_uninstall_msg">Found %1$d apps matching this tier. Do you want to process them now?</string>
+    <string name="no_apps_found_tier">No apps found for this debloat tier.</string>
 </resources>
