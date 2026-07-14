@@ -1,0 +1,8 @@
+<resources>
+    <style name="Theme.LinacreUninstaller.Dialog" parent="Theme.AppCompat.Dialog.Alert">
+        <item name="android:background">@color/surface</item>
+        <item name="android:textColorPrimary">@color/textPrimary</item>
+        <item name="android:textColorSecondary">@color/textSecondary</item>
+        <item name="colorAccent">@color/danger</item>
+    </style>
+</resources>

@@ -1,0 +1,14 @@
+<resources>
+    <string name="app_name">Linacre Uninstaller</string>
+    <string name="search_hint">Search apps…</string>
+    <string name="system_apps">System Apps</string>
+    <string name="user_apps">User Apps</string>
+    <string name="uninstall_prompt_title">Uninstall App</string>
+    <string name="uninstall_prompt_message">Are you sure you want to uninstall %1$s?</string>
+    <string name="uninstall">Uninstall</string>
+    <string name="cancel">Cancel</string>
+    <string name="empty_list">No apps found</string>
+    <string name="error_loading">Failed to load apps</string>
+    <string name="loading">Loading apps…</string>
+    <string name="total_apps_format">%1$d Apps</string>
+</resources>
