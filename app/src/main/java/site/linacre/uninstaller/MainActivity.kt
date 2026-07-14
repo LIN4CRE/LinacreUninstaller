@@ -34,7 +34,6 @@ import kotlinx.coroutines.withContext
 data class AppInfo(
     val name: String,
     val packageName: String,
-    val icon: android.graphics.drawable.Drawable,
     val isSystem: Boolean,
     val size: Long,
     val tier: Int
@@ -75,6 +74,12 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        val prefs = getSharedPreferences("prefs", Context.MODE_PRIVATE)
+        if (prefs.getBoolean("first_run", true)) {
+            startActivity(Intent(this, WelcomeActivity::class.java))
+            finish()
+            return
+        }
         setContentView(R.layout.activity_main)
 
         val toolbar = findViewById<Toolbar>(R.id.toolbar)
@@ -164,7 +169,6 @@ class MainActivity : AppCompatActivity() {
                 AppInfo(
                     name = pm.getApplicationLabel(appInfo).toString(),
                     packageName = pkg,
-                    icon = pm.getApplicationIcon(appInfo),
                     isSystem = isSystem,
                     size = 0L,
                     tier = getDebloatTier(pkg)
@@ -278,7 +282,11 @@ class AppAdapter : RecyclerView.Adapter<AppAdapter.AppViewHolder>() {
         val app = items[position]
         val context = holder.itemView.context
         
-        holder.icon.setImageDrawable(app.icon)
+        try {
+            holder.icon.setImageDrawable(context.packageManager.getApplicationIcon(app.packageName))
+        } catch (e: Exception) {
+            holder.icon.setImageDrawable(null)
+        }
         holder.name.text = app.name
         holder.packageName.text = app.packageName
         
