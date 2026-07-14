@@ -5,6 +5,8 @@
 
   **An elegant, powerful, and safe Android application uninstaller and debloat utility.**<br>
   *Part of the [Linacre.site](https://www.linacre.site/) Open Source Ecosystem.*
+  [![Download Latest APK](https://img.shields.io/github/v/release/LIN4CRE/LinacreUninstaller?label=Download%20Latest%20APK&style=for-the-badge&color=2563EB)](https://github.com/LIN4CRE/LinacreUninstaller/releases/latest)
+
 
   [![Kotlin](https://img.shields.io/badge/kotlin-%237F52FF.svg?style=flat-square&logo=kotlin&logoColor=white)](https://kotlinlang.org/)
   [![Android](https://img.shields.io/badge/Android-3DDC84?style=flat-square&logo=android&logoColor=white)](https://developer.android.com/)
@@ -24,6 +26,15 @@
 - **Batch Processing**: Select a debloat tier and automatically queue the uninstallation process to clean up your device rapidly.
 - **Safety Indicators**: Clear, color-coded badges let you know exactly what is safe to remove before you touch anything.
 
+
+## 📸 Screenshots
+
+<div align="center">
+  <img src="assets/screen1.png" alt="App List View" width="30%">
+  &nbsp;&nbsp;
+  <img src="assets/screen2.png" alt="Batch Uninstall View" width="30%">
+</div>
+
 ## 🚀 Getting Started
 
 ### Prerequisites
@@ -37,6 +48,12 @@
 2. Download the latest `LinacreUninstaller.apk`.
 3. Install the APK on your Android device (you may need to allow "Install from Unknown Sources").
 4. Launch the app and start cleaning!
+
+### ⚠️ Warning & Recovery
+Using the **Hardcore Debloat** tier can remove critical system components depending on your manufacturer. If you experience boot loops or app crashes after a hardcore debloat, you can restore packages via ADB using a PC:
+```bash
+adb shell cmd package install-existing <package.name>
+```
 
 ## 🛠️ Build from Source
 
