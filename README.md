@@ -14,7 +14,7 @@
 
 ---
 
-## What is fixed in v1.3.0
+## What is fixed in v1.3.1
 
 - **Launcher discoverability fixed:** the installed app now appears as **“Uninstaller”** in the launcher/app drawer instead of being hard to find only through Settings → Apps.
 - **New app icon:** refreshed shield/trash icon across adaptive and legacy launcher assets.
