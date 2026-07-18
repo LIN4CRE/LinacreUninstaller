@@ -50,6 +50,8 @@
 3. Install it on your Android phone. You may need to allow “install unknown apps” for your browser or file manager.
 4. After installing, look for **Uninstaller** in your app drawer/launcher.
 
+> If Android says the app cannot be installed because a package already exists, uninstall the old debug build first from Settings → Apps → Linacre Uninstaller, then install this release. Older debug releases were built with a different debug signing key.
+
 > If you still cannot see it, search your launcher for **Uninstaller**. The package name is `site.linacre.uninstaller`.
 
 ## Safety model
