@@ -10,28 +10,106 @@
     <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/surface"
+        android:background="@color/background"
         app:elevation="0dp">
 
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            app:titleTextColor="@color/textPrimary"
-            app:title="@string/app_name" />
+            android:paddingStart="8dp"
+            android:paddingEnd="8dp"
+            app:subtitle="@string/tagline"
+            app:subtitleTextColor="@color/textSecondary"
+            app:title="@string/app_name"
+            app:titleTextColor="@color/textPrimary" />
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
+            android:orientation="vertical"
             android:paddingHorizontal="16dp"
             android:paddingBottom="12dp">
 
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/bg_hero"
+                android:orientation="vertical"
+                android:padding="16dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Device cleanup console"
+                    android:textAllCaps="true"
+                    android:textColor="@color/colorPrimary"
+                    android:textSize="11sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:text="Review first. Remove second."
+                    android:textColor="@color/textPrimary"
+                    android:textSize="22sp"
+                    android:textStyle="bold" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="12dp"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/stat_total"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="8dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/bg_search"
+                        android:gravity="center"
+                        android:padding="10dp"
+                        android:text="0 apps"
+                        android:textColor="@color/textPrimary"
+                        android:textSize="13sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/stat_visible"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="8dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/bg_search"
+                        android:gravity="center"
+                        android:padding="10dp"
+                        android:text="0 shown"
+                        android:textColor="@color/textPrimary"
+                        android:textSize="13sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/stat_candidates"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:background="@drawable/bg_search"
+                        android:gravity="center"
+                        android:padding="10dp"
+                        android:text="0 candidates"
+                        android:textColor="@color/textPrimary"
+                        android:textSize="13sp"
+                        android:textStyle="bold" />
+                </LinearLayout>
+            </LinearLayout>
+
             <EditText
                 android:id="@+id/search_edit_text"
-                android:layout_width="0dp"
-                android:layout_height="48dp"
-                android:layout_weight="1"
+                android:layout_width="match_parent"
+                android:layout_height="52dp"
+                android:layout_marginTop="14dp"
                 android:background="@drawable/bg_search"
                 android:drawableStart="@android:drawable/ic_menu_search"
                 android:drawablePadding="8dp"
@@ -41,66 +119,69 @@
                 android:paddingHorizontal="16dp"
                 android:textColor="@color/textPrimary"
                 android:textColorHint="@color/textSecondary"
-                android:textSize="16sp" />
+                android:textSize="15sp" />
 
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:paddingHorizontal="16dp"
-            android:paddingBottom="12dp"
-            android:gravity="center">
-
-            <Button
-                android:id="@+id/btn_simple"
-                android:layout_width="0dp"
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="@string/btn_simple_debloat"
-                android:textSize="11sp"
-                android:paddingHorizontal="4dp"
-                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
-                app:strokeColor="@color/tier_simple"
-                android:textColor="@color/tier_simple"
-                android:layout_marginEnd="4dp"/>
+                android:layout_marginTop="12dp"
+                android:gravity="center"
+                android:orientation="horizontal">
 
-            <Button
-                android:id="@+id/btn_medium"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="@string/btn_debloat"
-                android:textSize="11sp"
-                android:paddingHorizontal="4dp"
-                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
-                app:strokeColor="@color/tier_medium"
-                android:textColor="@color/tier_medium"
-                android:layout_marginEnd="4dp"/>
+                <Button
+                    android:id="@+id/btn_simple"
+                    style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                    android:layout_width="0dp"
+                    android:layout_height="48dp"
+                    android:layout_marginEnd="6dp"
+                    android:layout_weight="1"
+                    android:paddingHorizontal="4dp"
+                    android:text="@string/btn_simple_debloat"
+                    android:textAllCaps="false"
+                    android:textColor="@color/tier_simple"
+                    android:textSize="12sp"
+                    app:cornerRadius="16dp"
+                    app:strokeColor="@color/tier_simple" />
 
-            <Button
-                android:id="@+id/btn_hardcore"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="@string/btn_hardcore_debloat"
-                android:textSize="11sp"
-                android:paddingHorizontal="4dp"
-                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
-                app:strokeColor="@color/tier_hardcore"
-                android:textColor="@color/tier_hardcore"/>
+                <Button
+                    android:id="@+id/btn_medium"
+                    style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                    android:layout_width="0dp"
+                    android:layout_height="48dp"
+                    android:layout_marginEnd="6dp"
+                    android:layout_weight="1"
+                    android:paddingHorizontal="4dp"
+                    android:text="@string/btn_debloat"
+                    android:textAllCaps="false"
+                    android:textColor="@color/tier_medium"
+                    android:textSize="12sp"
+                    app:cornerRadius="16dp"
+                    app:strokeColor="@color/tier_medium" />
+
+                <Button
+                    android:id="@+id/btn_hardcore"
+                    style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                    android:layout_width="0dp"
+                    android:layout_height="48dp"
+                    android:layout_weight="1"
+                    android:paddingHorizontal="4dp"
+                    android:text="@string/btn_hardcore_debloat"
+                    android:textAllCaps="false"
+                    android:textColor="@color/tier_hardcore"
+                    android:textSize="12sp"
+                    app:cornerRadius="16dp"
+                    app:strokeColor="@color/tier_hardcore" />
+            </LinearLayout>
         </LinearLayout>
 
         <com.google.android.material.tabs.TabLayout
             android:id="@+id/tab_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/surface"
+            android:background="@color/background"
             app:tabIndicatorColor="@color/colorPrimary"
             app:tabSelectedTextColor="@color/colorPrimary"
             app:tabTextColor="@color/textSecondary" />
-
     </com.google.android.material.appbar.AppBarLayout>
 
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
@@ -118,7 +199,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:clipToPadding="false"
-                android:paddingBottom="16dp" />
+                android:paddingHorizontal="12dp"
+                android:paddingTop="10dp"
+                android:paddingBottom="18dp" />
 
             <ProgressBar
                 android:id="@+id/progress_bar"
@@ -132,13 +215,11 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
+                android:gravity="center"
                 android:text="@string/empty_list"
                 android:textColor="@color/textSecondary"
-                android:textSize="18sp"
+                android:textSize="17sp"
                 android:visibility="gone" />
-
         </FrameLayout>
-
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
-
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

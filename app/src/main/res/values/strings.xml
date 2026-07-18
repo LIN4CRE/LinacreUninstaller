@@ -1,21 +1,31 @@
 <resources>
     <string name="app_name">Linacre Uninstaller</string>
-    <string name="search_hint">Search apps…</string>
-    <string name="system_apps">System Apps</string>
-    <string name="user_apps">User Apps</string>
-    <string name="uninstall_prompt_title">Uninstall App</string>
-    <string name="uninstall_prompt_message">Are you sure you want to uninstall %1$s?</string>
+    <string name="launcher_name">Uninstaller</string>
+    <string name="tagline">Safe Android cleanup with clear risk tiers</string>
+    <string name="search_hint">Search apps or packages…</string>
+    <string name="system_apps">System</string>
+    <string name="user_apps">User</string>
+    <string name="uninstall_prompt_title">Uninstall %1$s?</string>
+    <string name="uninstall_prompt_message">Android will ask you to confirm. Package: %1$s</string>
     <string name="uninstall">Uninstall</string>
     <string name="cancel">Cancel</string>
-    <string name="empty_list">No apps found</string>
+    <string name="empty_list">No apps match this view</string>
     <string name="error_loading">Failed to load apps</string>
-    <string name="loading">Loading apps…</string>
-    <string name="total_apps_format">%1$d Apps</string>
-    
-    <string name="btn_simple_debloat">Simple Debloat</string>
-    <string name="btn_debloat">Debloat</string>
-    <string name="btn_hardcore_debloat">Hardcore Debloat</string>
-    <string name="batch_uninstall_title">Batch Uninstall</string>
-    <string name="batch_uninstall_msg">Found %1$d apps matching this tier. Do you want to process them now?</string>
-    <string name="no_apps_found_tier">No apps found for this debloat tier.</string>
+    <string name="loading">Scanning installed apps…</string>
+    <string name="total_apps_format">%1$d apps scanned</string>
+    <string name="visible_apps_format">%1$d shown</string>
+    <string name="risk_apps_format">%1$d debloat candidates</string>
+    <string name="btn_simple_debloat">Simple</string>
+    <string name="btn_debloat">Medium</string>
+    <string name="btn_hardcore_debloat">Hardcore</string>
+    <string name="batch_uninstall_title">Start guided batch?</string>
+    <string name="batch_uninstall_msg">This will open Android uninstall prompts for %1$d apps in the current scope. You stay in control and can cancel any prompt.</string>
+    <string name="system_batch_warning">You are viewing system apps. Removing system components can break features. Only continue if you understand the risk.</string>
+    <string name="no_apps_found_tier">No apps found for this tier in the current tab.</string>
+    <string name="get_started">Open Uninstaller</string>
+    <string name="welcome_title">Linacre Uninstaller</string>
+    <string name="welcome_subtitle">Find, review and remove apps with clear safety tiers.</string>
+    <string name="welcome_find_me">After install, look for “Uninstaller” in your launcher/app drawer.</string>
+    <string name="app_details">App details</string>
+    <string name="close">Close</string>
 </resources>

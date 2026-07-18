@@ -9,10 +9,18 @@ import androidx.appcompat.app.AppCompatActivity
 class WelcomeActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        val prefs = getSharedPreferences("prefs", Context.MODE_PRIVATE)
+        if (!prefs.getBoolean("first_run", true)) {
+            startActivity(Intent(this, MainActivity::class.java))
+            finish()
+            return
+        }
+
         setContentView(R.layout.activity_welcome)
-        
+
         findViewById<Button>(R.id.btn_start).setOnClickListener {
-            getSharedPreferences("prefs", Context.MODE_PRIVATE).edit().putBoolean("first_run", false).apply()
+            prefs.edit().putBoolean("first_run", false).apply()
             startActivity(Intent(this, MainActivity::class.java))
             finish()
         }

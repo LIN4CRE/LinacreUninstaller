@@ -1,63 +1,72 @@
 <div align="center">
-  <img src="banner.png" alt="Linacre Uninstaller Banner" width="100%" />
+  <img src="banner.png" alt="Linacre Uninstaller — safe Android cleanup console" width="100%" />
 
-  # 🗑️ Linacre Uninstaller
+  # Linacre Uninstaller
 
-  **An elegant, powerful, and safe Android application uninstaller and debloat utility.**<br>
-  *Part of the [Linacre.site](https://www.linacre.site/) Open Source Ecosystem.*
-  [![Download Latest APK](https://img.shields.io/github/v/release/LIN4CRE/LinacreUninstaller?label=Download%20Latest%20APK&style=for-the-badge&color=2563EB)](https://github.com/LIN4CRE/LinacreUninstaller/releases/latest)
+  **A safer Android uninstaller and debloat review tool with a clean launcher icon, guided risk tiers and a polished Material dark UI.**<br>
+  Part of the [linacre.site](https://www.linacre.site/) open-source ecosystem.
 
-
-  [![Kotlin](https://img.shields.io/badge/kotlin-%237F52FF.svg?style=flat-square&logo=kotlin&logoColor=white)](https://kotlinlang.org/)
-  [![Android](https://img.shields.io/badge/Android-3DDC84?style=flat-square&logo=android&logoColor=white)](https://developer.android.com/)
-  [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg?style=flat-square)](https://opensource.org/licenses/MIT)
+  [![Download Latest APK](https://img.shields.io/github/v/release/LIN4CRE/LinacreUninstaller?label=Download%20Latest%20APK&style=for-the-badge&color=38BDF8)](https://github.com/LIN4CRE/LinacreUninstaller/releases/latest)
+  [![Kotlin](https://img.shields.io/badge/Kotlin-1.9-7F52FF?style=flat-square&logo=kotlin&logoColor=white)](https://kotlinlang.org/)
+  [![Android](https://img.shields.io/badge/Android-7.0%2B-3DDC84?style=flat-square&logo=android&logoColor=white)](https://developer.android.com/)
+  [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg?style=flat-square)](LICENSE)
 </div>
 
 ---
 
-## ✨ Features
+## What is fixed in v1.3.0
 
-- **Pristine UI**: A beautiful, responsive Material dark-themed interface matching the Linacre portfolio design language.
-- **Lightning Fast Search**: Find any system or user app instantly.
-- **Smart Debloat Tiers**: Three meticulously categorized tiers for system cleanup:
-  - 🟢 **Simple Debloat**: Safe to remove. Standard third-party bloat (Facebook, Netflix, TikTok, etc.).
-  - 🟡 **Medium Debloat**: Non-essential OEM utilities and Google background apps.
-  - 🔴 **Hardcore Debloat**: Aggressive mode targeting telemetry, tracking, and deep system analytics. *(Proceed with caution!)*
-- **Batch Processing**: Select a debloat tier and automatically queue the uninstallation process to clean up your device rapidly.
-- **Safety Indicators**: Clear, color-coded badges let you know exactly what is safe to remove before you touch anything.
+- **Launcher discoverability fixed:** the installed app now appears as **“Uninstaller”** in the launcher/app drawer instead of being hard to find only through Settings → Apps.
+- **New app icon:** refreshed shield/trash icon across adaptive and legacy launcher assets.
+- **Cleaner onboarding:** first launch explains safety tiers and tells users exactly what launcher name to look for.
+- **Polished main UI:** new hero console, search card, stats row, better spacing and cleaner dark Material styling.
+- **Safer batch flow:** batch uninstall now works from the current tab/filter scope and warns before processing system apps.
+- **Better app rows:** rounded cards, clearer badges, package names, app sizes and tap-for-details dialog.
+- **Privacy/security hardening:** app backup disabled and cleartext traffic disabled.
+- **Better repo presentation:** new banner and higher quality screenshots.
 
-
-## 📸 Screenshots
+## Screenshots
 
 <div align="center">
-  <img src="assets/screen1.png" alt="App List View" width="30%">
+  <img src="assets/screen1.png" alt="Linacre Uninstaller main app list" width="32%" />
   &nbsp;&nbsp;
-  <img src="assets/screen2.png" alt="Batch Uninstall View" width="30%">
+  <img src="assets/screen2.png" alt="Linacre Uninstaller guided batch and safety tiers" width="32%" />
 </div>
 
-## 🚀 Getting Started
+## Features
 
-### Prerequisites
+- **Search installed apps** by app name or package name.
+- **Separate User/System tabs** so risky system packages are not mixed into ordinary app cleanup.
+- **Risk tiers** for simple, medium and hardcore debloat candidates.
+- **Guided uninstall prompts** using Android's official uninstall flow — no silent deletion surprises.
+- **Batch queue helper** for selected risk tiers.
+- **App details dialog** before taking action.
+- **Pull-to-refresh** after installs/uninstalls.
 
-- Android 7.0 (API level 24) or higher.
-- *(Optional)* For seamless silent uninstalls without prompts, root access or Shizuku/ADB privileges are recommended (planned for future releases).
+## Installation
 
-### Installation
+1. Open the [latest release](https://github.com/LIN4CRE/LinacreUninstaller/releases/latest).
+2. Download the APK.
+3. Install it on your Android phone. You may need to allow “install unknown apps” for your browser or file manager.
+4. After installing, look for **Uninstaller** in your app drawer/launcher.
 
-1. Go to the [Releases](../../releases) tab.
-2. Download the latest `LinacreUninstaller.apk`.
-3. Install the APK on your Android device (you may need to allow "Install from Unknown Sources").
-4. Launch the app and start cleaning!
+> If you still cannot see it, search your launcher for **Uninstaller**. The package name is `site.linacre.uninstaller`.
 
-### ⚠️ Warning & Recovery
-Using the **Hardcore Debloat** tier can remove critical system components depending on your manufacturer. If you experience boot loops or app crashes after a hardcore debloat, you can restore packages via ADB using a PC:
+## Safety model
+
+Linacre Uninstaller does **not** silently remove apps. It opens Android's normal uninstall confirmation screen so you stay in control.
+
+- **Simple** — ordinary third-party bloat and social/media apps.
+- **Medium** — OEM utilities and optional services. Review first.
+- **Hardcore** — telemetry or deep system packages. Advanced users only.
+
+If a system app removal causes problems, you may be able to restore it with ADB:
+
 ```bash
 adb shell cmd package install-existing <package.name>
 ```
 
-## 🛠️ Build from Source
-
-To build this project locally:
+## Build from source
 
 ```bash
 git clone https://github.com/LIN4CRE/LinacreUninstaller.git
@@ -65,26 +74,34 @@ cd LinacreUninstaller
 ./gradlew assembleDebug
 ```
 
-The APK will be generated at `app/build/outputs/apk/debug/app-debug.apk`.
+Debug APK output:
 
-## 🎨 Design & Architecture
+```text
+app/build/outputs/apk/debug/app-debug.apk
+```
 
-Built with modern Android standards:
-- **Language**: Kotlin 1.9
-- **Build System**: Gradle 8.5
-- **UI Toolkit**: XML + Material Components
-- **Architecture**: Coroutines for async package fetching, ensuring a jank-free 60fps scrolling experience even with thousands of installed apps.
+## Technical notes
 
-## 🤝 Contributing
+- Kotlin + Android XML views.
+- Android 7.0+ / API 24+.
+- Uses `QUERY_ALL_PACKAGES` to show installed apps.
+- Uses `REQUEST_DELETE_PACKAGES` and Android's official uninstall intent.
+- No analytics, no network calls, no account system.
 
-Contributions, issues, and feature requests are welcome! Feel free to check the [issues page](../../issues).
+## Roadmap
 
-## 📄 License
+- Optional Shizuku/ADB assisted mode.
+- Export/import debloat lists.
+- Manufacturer-specific safe lists.
+- Undo guidance per package.
+- Signed release pipeline once account CI is available.
 
-This project is [MIT](LICENSE) licensed.
+## License
+
+MIT — see [LICENSE](LICENSE).
 
 ---
+
 <div align="center">
-  <b>Developed by <a href="https://github.com/LIN4CRE">David Linacre</a></b><br>
-  <i>Full-stack & AI systems engineer</i>
+  Built by <a href="https://github.com/LIN4CRE">David Linacre</a> · <a href="https://www.linacre.site/">linacre.site</a>
 </div>
