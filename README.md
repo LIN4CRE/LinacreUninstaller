@@ -1,3 +1,5 @@
+![LinacreUninstaller Banner](assets/banner.png)
+
 <div align="center">
   <img src="banner.png" alt="Linacre Uninstaller — safe Android cleanup console" width="100%" />
 
