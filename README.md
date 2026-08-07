@@ -8,7 +8,7 @@
   **A safer Android uninstaller and debloat review tool with a clean launcher icon, guided risk tiers and a polished Material dark UI.**<br>
   Part of the [linacre.site](https://www.linacre.site/) open-source ecosystem.
 
-  [![Download Latest APK](https://img.shields.io/github/v/release/LIN4CRE/LinacreUninstaller?label=Download%20Latest%20APK&style=for-the-badge&color=38BDF8)](https://github.com/LIN4CRE/LinacreUninstaller/releases/latest)
+  [![Download Latest APK](https://img.shields.io/github/v/release/LIN4CRE/LinacreUninstaller?label=Download%20Latest%20APK&style=for-the-badge&color=38BDF8)](https://github.com/DLinacre/LinacreUninstaller/releases/latest)
   [![Kotlin](https://img.shields.io/badge/Kotlin-1.9-7F52FF?style=flat-square&logo=kotlin&logoColor=white)](https://kotlinlang.org/)
   [![Android](https://img.shields.io/badge/Android-7.0%2B-3DDC84?style=flat-square&logo=android&logoColor=white)](https://developer.android.com/)
   [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg?style=flat-square)](LICENSE)
@@ -47,7 +47,7 @@
 
 ## Installation
 
-1. Open the [latest release](https://github.com/LIN4CRE/LinacreUninstaller/releases/latest).
+1. Open the [latest release](https://github.com/DLinacre/LinacreUninstaller/releases/latest).
 2. Download the APK.
 3. Install it on your Android phone. You may need to allow “install unknown apps” for your browser or file manager.
 4. After installing, look for **Uninstaller** in your app drawer/launcher.
@@ -73,7 +73,7 @@ adb shell cmd package install-existing <package.name>
 ## Build from source
 
 ```bash
-git clone https://github.com/LIN4CRE/LinacreUninstaller.git
+git clone https://github.com/DLinacre/LinacreUninstaller.git
 cd LinacreUninstaller
 ./gradlew assembleDebug
 ```
