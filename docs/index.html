@@ -3,24 +3,580 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <meta name="description" content="Android uninstaller and debloat review tool with a fixed launcher entry, polished Material dark UI, safety tiers, and guided uninstall flow." />
-  <title>LinacreUninstaller</title>
+  <meta name="description" content="Android uninstaller and debloat review tool with safety tiers, ADB script generation, OEM package catalog, and guided removal." />
+  <meta name="theme-color" content="#101114" />
+  <title>Linacre Uninstaller — Android Debloat Review & ADB Toolkit</title>
+  <link rel="icon" type="image/svg+xml" href="assets/icon.svg" />
   <style>
-    :root { color-scheme: dark; --bg:#101114; --card:#1b1d23; --text:#f6f1e8; --muted:#b8b2a7; --accent:#f5b84b; }
-    * { box-sizing:border-box; } body { margin:0; min-height:100vh; display:grid; place-items:center; padding:24px; font-family:Arial,Helvetica,sans-serif; color:var(--text); background:radial-gradient(circle at 10% 0%,rgba(245,184,75,.24),transparent 30%),var(--bg); }
-    main { width:min(820px,100%); background:linear-gradient(180deg,rgba(255,255,255,.06),rgba(255,255,255,.02)),var(--card); border:1px solid rgba(255,255,255,.14); border-radius:28px; padding:34px; box-shadow:0 24px 80px rgba(0,0,0,.45); }
-    .eyebrow { color:var(--accent); text-transform:uppercase; letter-spacing:.14em; font-size:13px; font-weight:800; }
-    h1 { font-size:clamp(38px,7vw,76px); line-height:.9; margin:10px 0 18px; } p { color:var(--muted); font-size:18px; line-height:1.55; }
-    a { display:inline-block; margin-top:16px; color:#231400; background:linear-gradient(180deg,#ffe1a1,#f5b84b); padding:13px 18px; border-radius:14px; text-decoration:none; font-weight:900; }
+    :root {
+      --bg: #0d0f12;
+      --card: #15181e;
+      --card-2: #1c212b;
+      --text: #f4f6fa;
+      --muted: #8e98a8;
+      --accent: #f5b84b;
+      --accent-glow: rgba(245, 184, 75, 0.25);
+      --safe: #10b981;
+      --safe-bg: rgba(16, 185, 129, 0.15);
+      --warning: #f59e0b;
+      --warning-bg: rgba(245, 158, 11, 0.15);
+      --critical: #ef4444;
+      --critical-bg: rgba(239, 68, 68, 0.15);
+      --border: rgba(255, 255, 255, 0.08);
+      --shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      color: var(--text);
+      background: radial-gradient(circle at 15% 0%, rgba(245, 184, 75, 0.18), transparent 35%),
+                  radial-gradient(circle at 85% 100%, rgba(16, 185, 129, 0.12), transparent 35%),
+                  var(--bg);
+      line-height: 1.5;
+    }
+    .shell {
+      max-width: 1140px;
+      margin: 0 auto;
+      padding: 24px 16px 64px;
+    }
+    header.hero {
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0.04), rgba(255, 255, 255, 0.01)), var(--card);
+      border: 1px solid var(--border);
+      border-radius: 28px;
+      padding: 36px 32px;
+      margin-bottom: 24px;
+      box-shadow: var(--shadow);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 24px;
+      flex-wrap: wrap;
+    }
+    .hero-content { max-width: 680px; }
+    .eyebrow {
+      color: var(--accent);
+      font-size: 12px;
+      font-weight: 800;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      margin: 0 0 8px;
+    }
+    h1 {
+      font-size: clamp(32px, 5vw, 54px);
+      font-weight: 900;
+      line-height: 1.05;
+      margin: 0 0 12px;
+    }
+    .hero p {
+      color: var(--muted);
+      font-size: 17px;
+      margin: 0 0 20px;
+    }
+    .hero-badges {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+    .badge-pill {
+      background: var(--card-2);
+      border: 1px solid var(--border);
+      color: var(--text);
+      font-size: 12px;
+      font-weight: 700;
+      padding: 6px 14px;
+      border-radius: 20px;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .hero-actions {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 12px 22px;
+      border-radius: 14px;
+      font-size: 14px;
+      font-weight: 800;
+      text-decoration: none;
+      cursor: pointer;
+      border: 1px solid transparent;
+      transition: all 0.15s ease;
+    }
+    .btn-primary {
+      background: linear-gradient(180deg, #ffe1a1, var(--accent));
+      color: #1a0f00;
+      box-shadow: 0 4px 20px var(--accent-glow);
+    }
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 25px rgba(245, 184, 75, 0.4);
+    }
+    .btn-outline {
+      background: var(--card-2);
+      border-color: var(--border);
+      color: var(--text);
+    }
+    .btn-outline:hover {
+      border-color: rgba(255, 255, 255, 0.25);
+      background: rgba(255, 255, 255, 0.05);
+    }
+    .main-grid {
+      display: grid;
+      grid-template-columns: 1fr 380px;
+      gap: 24px;
+    }
+    @media (max-width: 900px) {
+      .main-grid { grid-template-columns: 1fr; }
+    }
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      padding: 24px;
+      box-shadow: var(--shadow);
+    }
+    .filter-row {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+    }
+    .search-input {
+      flex: 1;
+      min-width: 220px;
+      background: var(--card-2);
+      border: 1px solid var(--border);
+      color: var(--text);
+      padding: 12px 16px;
+      border-radius: 12px;
+      font-size: 14px;
+      outline: none;
+    }
+    .search-input:focus {
+      border-color: var(--accent);
+    }
+    .select-dropdown {
+      background: var(--card-2);
+      border: 1px solid var(--border);
+      color: var(--text);
+      padding: 12px 16px;
+      border-radius: 12px;
+      font-size: 14px;
+      outline: none;
+      cursor: pointer;
+    }
+    .pkg-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      max-height: 560px;
+      overflow-y: auto;
+      padding-right: 6px;
+    }
+    .pkg-card {
+      background: var(--card-2);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 16px;
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      gap: 14px;
+      align-items: center;
+      transition: border-color 0.12s ease;
+    }
+    .pkg-card:hover {
+      border-color: rgba(255, 255, 255, 0.2);
+    }
+    .pkg-check {
+      width: 20px;
+      height: 20px;
+      accent-color: var(--accent);
+      cursor: pointer;
+    }
+    .pkg-name {
+      font-weight: 700;
+      font-size: 15px;
+      margin: 0 0 2px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .pkg-id {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      font-size: 12px;
+      color: var(--muted);
+      margin: 0 0 4px;
+      word-break: break-all;
+    }
+    .pkg-desc {
+      font-size: 13px;
+      color: var(--muted);
+      margin: 0;
+    }
+    .tier-badge {
+      font-size: 11px;
+      font-weight: 800;
+      padding: 4px 10px;
+      border-radius: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    .tier-safe { background: var(--safe-bg); color: var(--safe); border: 1px solid rgba(16, 185, 129, 0.3); }
+    .tier-warning { background: var(--warning-bg); color: var(--warning); border: 1px solid rgba(245, 158, 11, 0.3); }
+    .tier-critical { background: var(--critical-bg); color: var(--critical); border: 1px solid rgba(239, 68, 68, 0.3); }
+    
+    .panel-heading {
+      font-size: 18px;
+      font-weight: 800;
+      margin: 0 0 16px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .console-box {
+      background: #090a0c;
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 16px;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      font-size: 12px;
+      color: #a7f3d0;
+      min-height: 200px;
+      max-height: 300px;
+      overflow-y: auto;
+      white-space: pre-wrap;
+      word-break: break-all;
+      margin-bottom: 16px;
+    }
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      margin-bottom: 16px;
+    }
+    .stat-card {
+      background: var(--card-2);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 12px;
+      text-align: center;
+    }
+    .stat-val { font-size: 20px; font-weight: 900; color: var(--accent); }
+    .stat-lbl { font-size: 11px; color: var(--muted); text-transform: uppercase; font-weight: 700; margin-top: 2px; }
+    
+    .toast {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      background: #10b981;
+      color: #000;
+      font-weight: 800;
+      font-size: 13px;
+      padding: 10px 18px;
+      border-radius: 12px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+      transition: opacity 0.2s, transform 0.2s;
+      z-index: 999;
+    }
   </style>
 </head>
 <body>
-  <main>
-    <div class="eyebrow">GitHub Pages landing page</div>
-    <h1>LinacreUninstaller</h1>
-    <p>Android uninstaller and debloat review tool with a fixed launcher entry, polished Material dark UI, safety tiers, and guided uninstall flow.</p>
-    <p>This lightweight page was added so the project has a working GitHub Pages URL instead of a 404.</p>
-    <a href="https://github.com/DLinacre/LinacreUninstaller">View repository on GitHub</a>
-  </main>
+  <div class="shell">
+    <header class="hero">
+      <div class="hero-content">
+        <p class="eyebrow">Android Security &amp; Performance</p>
+        <h1>Linacre Uninstaller</h1>
+        <p>Review OEM background packages, identify telemetry daemons, and generate guided ADB disable and uninstall commands with built-in safety tiers.</p>
+        <div class="hero-badges">
+          <span class="badge-pill">🛡️ Safety Tiers (Safe / Warn / Critical)</span>
+          <span class="badge-pill">⚡ Wireless ADB Compatible</span>
+          <span class="badge-pill">📺 Fire TV &amp; Phone Optimized</span>
+        </div>
+      </div>
+      <div class="hero-actions">
+        <a href="https://github.com/LIN4CRE/LinacreUninstaller" class="btn btn-primary" target="_blank" rel="noopener">
+          <span>View on GitHub</span>
+          <span>→</span>
+        </a>
+        <a href="#directory" class="btn btn-outline">
+          <span>Explore Package Directory</span>
+        </a>
+      </div>
+    </header>
+
+    <div class="main-grid" id="directory">
+      <section class="card">
+        <div class="panel-heading">
+          <span>OEM Package Directory</span>
+          <span id="selectedCount" style="font-size: 13px; color: var(--accent); font-weight: 700;">0 packages selected</span>
+        </div>
+
+        <div class="filter-row">
+          <input type="text" id="searchInput" class="search-input" placeholder="Search by package name or description..." />
+          <select id="oemFilter" class="select-dropdown">
+            <option value="all">All OEMs &amp; Ecosystems</option>
+            <option value="firetv">Amazon Fire TV / Fire OS</option>
+            <option value="samsung">Samsung One UI</option>
+            <option value="xiaomi">Xiaomi MIUI / HyperOS</option>
+            <option value="google">Google Pixel / AOSP</option>
+          </select>
+          <select id="tierFilter" class="select-dropdown">
+            <option value="all">All Tiers</option>
+            <option value="safe">Safe to Remove</option>
+            <option value="warning">Warning / Functional</option>
+            <option value="critical">Critical System</option>
+          </select>
+        </div>
+
+        <div class="pkg-list" id="packageList">
+          <!-- Rendered dynamically -->
+        </div>
+      </section>
+
+      <aside class="card">
+        <div class="panel-heading">
+          <span>ADB Command Studio</span>
+        </div>
+
+        <div class="stats-grid">
+          <div class="stat-card">
+            <div class="stat-val" id="statSelected">0</div>
+            <div class="stat-lbl">Selected</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-val" id="statEstRam">~0 MB</div>
+            <div class="stat-lbl">RAM Freed</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-val" id="statSafe">24</div>
+            <div class="stat-lbl">Safe Targets</div>
+          </div>
+        </div>
+
+        <label style="font-size: 12px; font-weight: 700; color: var(--muted); text-transform: uppercase; display: block; margin-bottom: 6px;">Generated ADB Script:</label>
+        <div class="console-box" id="consoleOutput"># Select packages from the directory to generate clean ADB commands&#10;# e.g. adb shell pm uninstall -k --user 0 &lt;package&gt;</div>
+
+        <div style="display: flex; flex-direction: column; gap: 8px;">
+          <button class="btn btn-primary" id="copyBtn" type="button">📋 Copy Commands</button>
+          <button class="btn btn-outline" id="downloadScriptBtn" type="button">💾 Download .bat / .sh Script</button>
+          <button class="btn btn-outline" id="selectSafeBtn" type="button">✨ Select All Safe Fire TV Bloat</button>
+        </div>
+      </aside>
+    </div>
+  </div>
+
+  <div id="toast" class="toast" style="opacity: 0; pointer-events: none;">Copied to clipboard!</div>
+
+  <script>
+    const PACKAGES = [
+      // Fire OS / Fire TV Targets
+      { id: 'com.amazon.device.sale.service', name: 'Fire TV Ad Promo Service', oem: 'firetv', tier: 'safe', ram: 25, desc: 'Pushes lockscreen advertisements, featured banner sponsors, and screensaver sales prompts.' },
+      { id: 'com.amazon.whisperplay.contracts', name: 'Whisperplay Fling Telemetry', oem: 'firetv', tier: 'safe', ram: 30, desc: 'Background daemon listening for second-screen casting and metrics telemetry.' },
+      { id: 'com.amazon.kindle.kso', name: 'Special Offers Daemon', oem: 'firetv', tier: 'safe', ram: 20, desc: 'Amazon Special Offers banner delivery and telemetry daemon.' },
+      { id: 'com.amazon.kato', name: 'Amazon Usage Telemetry (Kato)', oem: 'firetv', tier: 'safe', ram: 35, desc: 'Continuous app usage analytics and telemetry reporting engine.' },
+      { id: 'com.amazon.device.crashmanager', name: 'Crash & Log Telemetry Reporter', oem: 'firetv', tier: 'safe', ram: 18, desc: 'Uploads system crash dumps and debug traces to Amazon cloud.' },
+      { id: 'com.amazon.bueller.music', name: 'Amazon Prime Music TV Stub', oem: 'firetv', tier: 'safe', ram: 15, desc: 'Stock preinstalled Amazon Music player for Fire TV.' },
+      { id: 'com.amazon.bueller.photos', name: 'Amazon Cloud Photos TV', oem: 'firetv', tier: 'safe', ram: 22, desc: 'Amazon Photos screensaver and cloud sync engine.' },
+      { id: 'com.amazon.visualsearch', name: 'Visual Search Camera Daemon', oem: 'firetv', tier: 'safe', ram: 12, desc: 'Visual recognition agent not utilized on televisions.' },
+      { id: 'com.amazon.shpm', name: 'Amazon Shopping Assistant TV', oem: 'firetv', tier: 'safe', ram: 16, desc: 'Shopping suggestions and promotional items on home feed.' },
+      { id: 'com.amazon.hedwig', name: 'Amazon Delivery Notification HUD', oem: 'firetv', tier: 'warning', ram: 20, desc: 'Shows package delivery alerts on the TV screen. Safe to remove if unwanted.' },
+      { id: 'com.amazon.vizzini', name: 'Voice Remote Alexa Companion', oem: 'firetv', tier: 'warning', ram: 45, desc: 'Processes Alexa mic button voice queries. Disabling disables Alexa voice search.' },
+      { id: 'com.amazon.fireos', name: 'Fire OS Core Framework', oem: 'firetv', tier: 'critical', ram: 0, desc: 'Core OS subsystem. Do not disable or the TV will bootloop.' },
+
+      // Samsung One UI
+      { id: 'com.samsung.android.bixby.agent', name: 'Bixby Voice Assistant', oem: 'samsung', tier: 'safe', ram: 60, desc: 'Samsung Bixby voice daemon and background hotword monitor.' },
+      { id: 'com.samsung.android.app.spage', name: 'Samsung Free / Daily Feed', oem: 'samsung', tier: 'safe', ram: 40, desc: 'Left-most home screen news and advertisement aggregator.' },
+      { id: 'com.samsung.android.game.gamehome', name: 'Samsung Gaming Hub', oem: 'samsung', tier: 'safe', ram: 30, desc: 'Game launcher overlay and game marketing promotions.' },
+      { id: 'com.sec.android.app.sbrowser', name: 'Samsung Internet Browser', oem: 'samsung', tier: 'safe', ram: 45, desc: 'Preinstalled browser. Safe to replace with Chrome or Brave.' },
+      { id: 'com.samsung.android.knox.analytics', name: 'Knox Analytics Telemetry', oem: 'samsung', tier: 'safe', ram: 20, desc: 'Enterprise security analytics uploaded to Samsung.' },
+      { id: 'com.sec.android.app.launcher', name: 'One UI Home Launcher', oem: 'samsung', tier: 'critical', ram: 0, desc: 'Default home launcher. Required unless a custom launcher is set as default.' },
+
+      // Meta / Facebook Preinstalls
+      { id: 'com.facebook.system', name: 'Facebook App Installer', oem: 'google', tier: 'safe', ram: 25, desc: 'OEM preinstalled background installer with system-level APK privileges.' },
+      { id: 'com.facebook.appmanager', name: 'Facebook App Manager', oem: 'google', tier: 'safe', ram: 22, desc: 'Background updater that pushes silent Facebook and Instagram app updates.' },
+      { id: 'com.facebook.services', name: 'Facebook Analytics Service', oem: 'google', tier: 'safe', ram: 18, desc: 'Shared tracking and analytics library across preloaded apps.' },
+
+      // Xiaomi MIUI / HyperOS
+      { id: 'com.miui.analytics', name: 'MIUI Analytics Telemetry', oem: 'xiaomi', tier: 'safe', ram: 35, desc: 'Comprehensive device usage telemetry and user analytics.' },
+      { id: 'com.miui.msa.global', name: 'MIUI System Ads (MSA)', oem: 'xiaomi', tier: 'safe', ram: 40, desc: 'System service dedicated exclusively to injecting advertisements into stock apps.' },
+      { id: 'com.xiaomi.glgm', name: 'Xiaomi Games Marketing', oem: 'xiaomi', tier: 'safe', ram: 28, desc: 'Promotional game notifications and recommended downloads.' },
+
+      // Android AOSP Core & Safety
+      { id: 'com.google.android.youtube', name: 'Stock YouTube App', oem: 'google', tier: 'safe', ram: 65, desc: 'Stock ad-supported YouTube app. Safe to replace with SmartTube 4K.' },
+      { id: 'com.google.android.apps.tachyon', name: 'Google Meet / Duo', oem: 'google', tier: 'safe', ram: 30, desc: 'Preloaded video call service.' },
+      { id: 'com.android.providers.telephony', name: 'Telephony Database Provider', oem: 'google', tier: 'critical', ram: 0, desc: 'Core cellular and emergency dialing subsystem. DO NOT REMOVE.' },
+      { id: 'com.android.systemui', name: 'Android System UI', oem: 'google', tier: 'critical', ram: 0, desc: 'Status bar, navigation gestures, and notification drawer. DO NOT REMOVE.' }
+    ];
+
+    const state = {
+      selected: new Set(),
+      search: '',
+      oem: 'all',
+      tier: 'all'
+    };
+
+    const elements = {
+      packageList: document.getElementById('packageList'),
+      consoleOutput: document.getElementById('consoleOutput'),
+      selectedCount: document.getElementById('selectedCount'),
+      statSelected: document.getElementById('statSelected'),
+      statEstRam: document.getElementById('statEstRam'),
+      statSafe: document.getElementById('statSafe'),
+      searchInput: document.getElementById('searchInput'),
+      oemFilter: document.getElementById('oemFilter'),
+      tierFilter: document.getElementById('tierFilter'),
+      copyBtn: document.getElementById('copyBtn'),
+      downloadScriptBtn: document.getElementById('downloadScriptBtn'),
+      selectSafeBtn: document.getElementById('selectSafeBtn'),
+      toast: document.getElementById('toast')
+    };
+
+    function renderList() {
+      const filtered = PACKAGES.filter(pkg => {
+        const matchesOem = state.oem === 'all' || pkg.oem === state.oem;
+        const matchesTier = state.tier === 'all' || pkg.tier === state.tier;
+        const query = state.search.toLowerCase();
+        const matchesSearch = !query || pkg.name.toLowerCase().includes(query) || pkg.id.toLowerCase().includes(query) || pkg.desc.toLowerCase().includes(query);
+        return matchesOem && matchesTier && matchesSearch;
+      });
+
+      elements.packageList.innerHTML = '';
+      if (filtered.length === 0) {
+        elements.packageList.innerHTML = '<div style="text-align:center; padding:32px; color:var(--muted);">No matching packages found.</div>';
+        return;
+      }
+
+      filtered.forEach(pkg => {
+        const card = document.createElement('div');
+        card.className = 'pkg-card';
+        const isChecked = state.selected.has(pkg.id);
+        const isCritical = pkg.tier === 'critical';
+
+        card.innerHTML = `
+          <input type="checkbox" class="pkg-check" data-id="${pkg.id}" ${isChecked ? 'checked' : ''} ${isCritical ? 'disabled' : ''} />
+          <div>
+            <div class="pkg-name">
+              <span>${pkg.name}</span>
+            </div>
+            <div class="pkg-id">${pkg.id}</div>
+            <p class="pkg-desc">${pkg.desc}</p>
+          </div>
+          <div>
+            <span class="tier-badge tier-${pkg.tier}">${pkg.tier}</span>
+          </div>
+        `;
+
+        const check = card.querySelector('.pkg-check');
+        check.addEventListener('change', () => {
+          if (check.checked) {
+            state.selected.add(pkg.id);
+          } else {
+            state.selected.delete(pkg.id);
+          }
+          updateUI();
+        });
+
+        elements.packageList.appendChild(card);
+      });
+    }
+
+    function updateUI() {
+      const count = state.selected.size;
+      elements.selectedCount.textContent = `${count} packages selected`;
+      elements.statSelected.textContent = count;
+
+      let ramTotal = 0;
+      PACKAGES.forEach(pkg => {
+        if (state.selected.has(pkg.id)) ramTotal += pkg.ram;
+      });
+      elements.statEstRam.textContent = `~${ramTotal} MB`;
+
+      if (count === 0) {
+        elements.consoleOutput.textContent = '# Select packages from the directory to generate clean ADB commands\n# e.g. adb shell pm uninstall -k --user 0 <package>';
+      } else {
+        const cmds = ['# Linacre Uninstaller — Automated Debloat Script', '# Execute with: adb devices'];
+        state.selected.forEach(id => {
+          cmds.push(`adb shell pm uninstall -k --user 0 ${id}`);
+        });
+        cmds.push('\n# Counterpart Restore Commands:');
+        state.selected.forEach(id => {
+          cmds.push(`adb shell cmd package install-existing ${id}`);
+        });
+        elements.consoleOutput.textContent = cmds.join('\n');
+      }
+    }
+
+    function showToast(msg) {
+      elements.toast.textContent = msg;
+      elements.toast.style.opacity = '1';
+      elements.toast.style.pointerEvents = 'auto';
+      setTimeout(() => {
+        elements.toast.style.opacity = '0';
+        elements.toast.style.pointerEvents = 'none';
+      }, 2500);
+    }
+
+    elements.searchInput.addEventListener('input', (e) => {
+      state.search = e.target.value.trim();
+      renderList();
+    });
+
+    elements.oemFilter.addEventListener('change', (e) => {
+      state.oem = e.target.value;
+      renderList();
+    });
+
+    elements.tierFilter.addEventListener('change', (e) => {
+      state.tier = e.target.value;
+      renderList();
+    });
+
+    elements.copyBtn.addEventListener('click', () => {
+      if (state.selected.size === 0) {
+        showToast('Please select packages first!');
+        return;
+      }
+      navigator.clipboard.writeText(elements.consoleOutput.textContent).then(() => {
+        showToast('✅ ADB commands copied to clipboard!');
+      });
+    });
+
+    elements.selectSafeBtn.addEventListener('click', () => {
+      PACKAGES.forEach(pkg => {
+        if (pkg.oem === 'firetv' && pkg.tier === 'safe') {
+          state.selected.add(pkg.id);
+        }
+      });
+      renderList();
+      updateUI();
+      showToast('Selected all safe Fire TV targets!');
+    });
+
+    elements.downloadScriptBtn.addEventListener('click', () => {
+      if (state.selected.size === 0) {
+        showToast('Please select packages first!');
+        return;
+      }
+      const text = elements.consoleOutput.textContent;
+      const blob = new Blob([text], { type: 'text/plain' });
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = 'debloat-script.bat';
+      a.click();
+      showToast('Downloaded debloat-script.bat!');
+    });
+
+    // Initial render
+    renderList();
+    updateUI();
+  </script>
 </body>
 </html>
